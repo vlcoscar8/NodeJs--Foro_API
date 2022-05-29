@@ -1,7 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 import { connectDB } from "./config/db.js";
 import { avatarRouter } from "./api/routes/avatar.routes.js";
+import { userRouter } from "./api/routes/user.routes.js";
 
 // Dotenv
 dotenv.config();
@@ -14,9 +18,30 @@ const router = express.Router();
 
 server.use("/", router);
 server.use(express.json());
+server.use(
+    cors({
+        origin: `*`,
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
+server.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 3600000,
+        },
+        store: MongoStore.create({
+            mongoUrl: DB_URL,
+        }),
+    })
+);
 
 //Routes
 server.use("/avatar", avatarRouter);
+server.use("/user", userRouter);
 
 // Errors
 server.use("*", (req, res, next) => {
