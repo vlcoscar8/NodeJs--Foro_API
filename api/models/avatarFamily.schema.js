@@ -7,13 +7,13 @@ const avatarFamilySchema = new Schema({
     avatarList: [
         {
             type: mongoose.Types.ObjectId,
-            red: "Avatar",
+            ref: "Avatar",
         },
     ],
     avatarSpecial: [
         {
             type: mongoose.Types.ObjectId,
-            red: "Avatar",
+            ref: "Avatar",
         },
     ],
 });
