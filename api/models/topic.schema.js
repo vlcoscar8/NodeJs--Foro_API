@@ -1,0 +1,39 @@
+import mongoose from "mongoose";
+
+const Schema = mongoose.Schema;
+
+const topicSchema = new Schema({
+    title: { type: String, required: true },
+    wallpaper: { type: String },
+    logo: { type: String, required: true },
+    familyTopic: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: "FamilyTopic",
+        },
+    ],
+
+    user: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+    followers: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+        },
+    ],
+
+    comments: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: "Comment",
+        },
+    ],
+});
+
+const Topic = mongoose.model("Topic", topicSchema);
+
+export { Topic };
