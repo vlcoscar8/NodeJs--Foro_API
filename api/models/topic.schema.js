@@ -6,13 +6,7 @@ const topicSchema = new Schema({
     title: { type: String, required: true },
     wallpaper: { type: String },
     logo: { type: String, required: true },
-    familyTopic: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: "FamilyTopic",
-        },
-    ],
-
+    familyTopic: { type: String, required: true },
     user: [
         {
             type: mongoose.Types.ObjectId,

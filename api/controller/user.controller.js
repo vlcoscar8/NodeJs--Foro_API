@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { FamilyTopic } from "../models/familyTopic.schema.js";
+import { Topic } from "../models/topic.schema.js";
 import { User } from "../models/user.schema.js";
 
 const registerUser = async (req, res, next) => {
@@ -26,7 +28,9 @@ const registerUser = async (req, res, next) => {
             email: email,
             password: passwordHash,
             username: username,
-            avatar: "https://res.cloudinary.com/oscar-perez/image/upload/v1651068282/RecipeAssets/FoodCategory/userImage_hsw5hj.png",
+            avatarProfile:
+                "https://res.cloudinary.com/oscar-perez/image/upload/v1653822395/RecipeAssets/ForoAvatar/common03_ddwehm.png",
+            coins: 0,
         });
 
         await newUser.save();
@@ -66,13 +70,9 @@ const logInUser = async (req, res, next) => {
             { expiresIn: "1h" }
         );
 
-        return res.json({
-            status: 200,
-            message: "Loggin success!",
-            data: {
-                userId: user._id,
-                token: token,
-            },
+        return res.status(200).json({
+            userId: user._id,
+            token: token,
         });
     } catch (error) {
         next(error);
@@ -98,14 +98,74 @@ const getUserDetail = async (req, res, next) => {
 
         const user = await User.findById(id);
 
-        return res.status(200).json({
-            status: 200,
-            message: "User successfully finded",
-            data: user,
-        });
+        return res.status(200).json(user);
     } catch (error) {
         next(error);
     }
 };
 
-export { registerUser, logInUser, logOutUser, getUserDetail };
+const editUserInfo = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const userBody = req.body;
+
+        await User.findByIdAndUpdate(id, { ...userBody });
+        const userEdited = await User.findById(id);
+
+        res.status(200).json(userEdited);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const createTopic = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { title, wallpaper, logo, familyTopic } = req.body;
+
+        const user = await User.findById(id);
+        const newTopic = new Topic({
+            title: title,
+            wallpaper: wallpaper,
+            logo: logo,
+            familyTopic: familyTopic,
+        });
+        await newTopic.save();
+
+        await Topic.findByIdAndUpdate(newTopic._id, {
+            $push: {
+                user: user,
+            },
+        });
+
+        const topic = await Topic.findById(newTopic._id);
+
+        await FamilyTopic.findOneAndUpdate(
+            { family: familyTopic },
+            {
+                $push: {
+                    topics: topic,
+                },
+            }
+        );
+
+        await User.findByIdAndUpdate(id, {
+            $push: {
+                topics: topic,
+            },
+        });
+
+        res.status(200).json(topic);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
+    registerUser,
+    logInUser,
+    logOutUser,
+    getUserDetail,
+    editUserInfo,
+    createTopic,
+};

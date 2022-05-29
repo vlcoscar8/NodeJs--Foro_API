@@ -6,6 +6,7 @@ import MongoStore from "connect-mongo";
 import { connectDB } from "./config/db.js";
 import { avatarRouter } from "./api/routes/avatar.routes.js";
 import { userRouter } from "./api/routes/user.routes.js";
+import { topicRouter } from "./api/routes/topic.routes.js";
 
 // Dotenv
 dotenv.config();
@@ -43,6 +44,7 @@ server.use(
 //Routes
 server.use("/avatar", avatarRouter);
 server.use("/user", userRouter);
+server.use("/topic", topicRouter);
 
 // Errors
 server.use("*", (req, res, next) => {

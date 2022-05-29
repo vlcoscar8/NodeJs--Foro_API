@@ -10,7 +10,7 @@ const userSchema = new Schema({
     surname: { type: String },
     age: { type: String },
     avatarProfile: { type: String },
-    coins: { type: Number },
+    coins: { type: Number, required: true },
     topics: [
         {
             type: mongoose.Types.ObjectId,
@@ -21,6 +21,12 @@ const userSchema = new Schema({
         {
             type: mongoose.Types.ObjectId,
             ref: "AvatarFamily",
+        },
+    ],
+    comments: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: "Comment",
         },
     ],
 });
