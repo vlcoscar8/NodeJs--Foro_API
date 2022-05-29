@@ -11,11 +11,12 @@ import { userRouter } from "./api/routes/user.routes.js";
 dotenv.config();
 const PORT = process.env.PORT;
 const DB_URL = process.env.DB_URL;
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
 // Server configuration
 const server = express();
 const router = express.Router();
-
+server.set("secretKey", "nodeRestApi");
 server.use("/", router);
 server.use(express.json());
 server.use(
@@ -27,7 +28,7 @@ server.use(
 );
 server.use(
     session({
-        secret: process.env.SESSION_SECRET,
+        secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
