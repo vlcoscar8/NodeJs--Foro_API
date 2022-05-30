@@ -14,9 +14,9 @@ const avatarsDoc = avatarData.map((element) => new Avatar(element));
 const familyTopicDoc = familyTopicData.map(
     (element) => new FamilyTopic(element)
 );
-const avatarFamilyDoc = avatarFamilyData.map(
-    (element) => new AvatarFamily(element)
-);
+// const avatarFamilyDoc = avatarFamilyData.map(
+//     (element) => new AvatarFamily(element)
+// );
 
 const creationSeed = mongoose
     .connect(DB_URL, {
@@ -25,9 +25,9 @@ const creationSeed = mongoose
     })
     .then(async () => {
         await createCollections();
-        await updateNoobAvatarFamily();
-        await updateAmateurAvatarFamily();
-        await updateProAvatarFamily();
+        // await updateNoobAvatarFamily();
+        // await updateAmateurAvatarFamily();
+        // await updateProAvatarFamily();
     })
     .catch((err) => {
         console.error(err);
@@ -44,96 +44,93 @@ const createCollections = async () => {
     await FamilyTopic.collection.drop();
     await FamilyTopic.insertMany(familyTopicDoc);
 
-    await AvatarFamily.collection.drop();
-    await AvatarFamily.insertMany(avatarFamilyDoc);
-
     await Topic.collection.drop();
     await Comment.collection.drop();
 };
 
-const updateNoobAvatarFamily = async () => {
-    const noobAvatarList = await Avatar.find({
-        $and: [{ family: "Noob" }, { type: "Common" }],
-    });
-    const noobSpecialAvatar = await Avatar.find({
-        $and: [{ family: "Noob" }, { type: "Special" }],
-    });
+// const updateNoobAvatarFamily = async () => {
+//     const noobAvatarList = await Avatar.find({
+//         $and: [{ family: "Noob" }, { type: "Common" }],
+//     });
+//     const noobSpecialAvatar = await Avatar.find({
+//         $and: [{ family: "Noob" }, { type: "Special" }],
+//     });
 
-    noobAvatarList.forEach(async (element) => {
-        await AvatarFamily.findOneAndUpdate(
-            { family: "Noob" },
-            {
-                $push: {
-                    avatarList: element,
-                },
-            }
-        );
-    });
+//     noobAvatarList.forEach(async (element) => {
+//         await AvatarFamily.findOneAndUpdate(
+//             { family: "Noob" },
+//             {
+//                 $push: {
+//                     avatarList: element,
+//                 },
+//             }
+//         );
+//     });
 
-    await AvatarFamily.findOneAndUpdate(
-        { family: "Noob" },
-        {
-            $push: {
-                avatarSpecial: noobSpecialAvatar,
-            },
-        }
-    );
-};
+//     await AvatarFamily.findOneAndUpdate(
+//         { family: "Noob" },
+//         {
+//             $push: {
+//                 avatarSpecial: noobSpecialAvatar,
+//             },
+//         }
+//     );
+// };
 
-const updateAmateurAvatarFamily = async () => {
-    const amateurAvatarList = await Avatar.find({
-        $and: [{ family: "Amateur" }, { type: "Common" }],
-    });
-    const amateurSpecialAvatar = await Avatar.find({
-        $and: [{ family: "Amateur" }, { type: "Special" }],
-    });
+// const updateAmateurAvatarFamily = async () => {
+//     const amateurAvatarList = await Avatar.find({
+//         $and: [{ family: "Amateur" }, { type: "Common" }],
+//     });
+//     const amateurSpecialAvatar = await Avatar.find({
+//         $and: [{ family: "Amateur" }, { type: "Special" }],
+//     });
 
-    amateurAvatarList.forEach(async (element) => {
-        await AvatarFamily.findOneAndUpdate(
-            { family: "Amateur" },
-            {
-                $push: {
-                    avatarList: element,
-                },
-            }
-        );
-    });
+//     amateurAvatarList.forEach(async (element) => {
+//         await AvatarFamily.findOneAndUpdate(
+//             { family: "Amateur" },
+//             {
+//                 $push: {
+//                     avatarList: element,
+//                 },
+//             }
+//         );
+//     });
 
-    await AvatarFamily.findOneAndUpdate(
-        { family: "Amateur" },
-        {
-            $push: {
-                avatarSpecial: amateurSpecialAvatar,
-            },
-        }
-    );
-};
+//     await AvatarFamily.findOneAndUpdate(
+//         { family: "Amateur" },
+//         {
+//             $push: {
+//                 avatarSpecial: amateurSpecialAvatar,
+//             },
+//         }
+//     );
+// };
 
-const updateProAvatarFamily = async () => {
-    const proAvatarList = await Avatar.find({
-        $and: [{ family: "Pro" }, { type: "Common" }],
-    });
-    const proSpecialAvatar = await Avatar.find({
-        $and: [{ family: "Pro" }, { type: "Special" }],
-    });
+// const updateProAvatarFamily = async () => {
+//     const proAvatarList = await Avatar.find({
+//         $and: [{ family: "Pro" }, { type: "Common" }],
+//     });
+//     const proSpecialAvatar = await Avatar.find({
+//         $and: [{ family: "Pro" }, { type: "Special" }],
+//     });
 
-    proAvatarList.forEach(async (element) => {
-        await AvatarFamily.findOneAndUpdate(
-            { family: "Pro" },
-            {
-                $push: {
-                    avatarList: element,
-                },
-            }
-        );
-    });
+//     proAvatarList.forEach(async (element) => {
+//         await AvatarFamily.findOneAndUpdate(
+//             { family: "Pro" },
+//             {
+//                 $push: {
+//                     avatarList: element,
+//                 },
+//             }
+//         );
+//     });
 
-    await AvatarFamily.findOneAndUpdate(
-        { family: "Pro" },
-        {
-            $push: {
-                avatarSpecial: proSpecialAvatar,
-            },
-        }
-    );
-};
+//     await AvatarFamily.findOneAndUpdate(
+//         { family: "Pro" },
+//         {
+//             $push: {
+//                 avatarSpecial: proSpecialAvatar,
+//             },
+//         }
+//     );
+// };

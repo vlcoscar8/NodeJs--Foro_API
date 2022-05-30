@@ -1,12 +1,11 @@
 import { AvatarFamily } from "../models/avatarFamily.schema.js";
 import { Avatar } from "../models/avatar.schema.js";
 
-const getFamilyTypes = async (req, res, next) => {
+const getAvatarList = async (req, res, next) => {
     try {
         const avatarList = await Avatar.find();
-        const familyTypes = [...new Set(avatarList.map((el) => el.family))];
 
-        res.status(201).json(familyTypes);
+        res.status(201).json(avatarList);
     } catch (error) {
         next(error);
     }
@@ -14,10 +13,9 @@ const getFamilyTypes = async (req, res, next) => {
 
 const getAvatarFamilyDetail = async (req, res, next) => {
     try {
-        const { family } = req.body;
-        const avatarFamilyDetail = await AvatarFamily.find({ family: family })
-            .populate("avatarList")
-            .populate("avatarSpecial");
+        const { family } = req.params;
+
+        const avatarFamilyDetail = await Avatar.find({ family: family });
 
         res.status(201).json(avatarFamilyDetail);
     } catch (error) {
@@ -25,4 +23,4 @@ const getAvatarFamilyDetail = async (req, res, next) => {
     }
 };
 
-export { getAvatarFamilyDetail, getFamilyTypes };
+export { getAvatarFamilyDetail, getAvatarList };

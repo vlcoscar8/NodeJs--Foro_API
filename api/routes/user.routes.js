@@ -8,6 +8,7 @@ import {
     createTopic,
     createComment,
     createReply,
+    followTopic,
     setAvatarProfile,
     deleteComment,
 } from "../controller/user.controller.js";
@@ -22,6 +23,7 @@ router.post("/edit/:id", editUserInfo);
 router.post("/topic/:id", createTopic);
 router.post("/comment/:id", createComment);
 router.post("/reply/:id", createReply);
+router.post("/follow/:id", followTopic);
 router.put("/avatar/:id", setAvatarProfile);
 router.delete("/comment/:id", deleteComment);
 

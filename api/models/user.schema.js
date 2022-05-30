@@ -20,13 +20,19 @@ const userSchema = new Schema({
     avatarList: [
         {
             type: mongoose.Types.ObjectId,
-            ref: "AvatarFamily",
+            ref: "Avatar",
         },
     ],
     comments: [
         {
             type: mongoose.Types.ObjectId,
             ref: "Comment",
+        },
+    ],
+    topicsFollowing: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: "Topic",
         },
     ],
 });

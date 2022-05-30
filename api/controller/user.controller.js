@@ -5,7 +5,6 @@ import { Topic } from "../models/topic.schema.js";
 import { User } from "../models/user.schema.js";
 import { Comment } from "../models/comment.schema.js";
 import { Avatar } from "../models/avatar.schema.js";
-import { AvatarFamily } from "../models/avatarFamily.schema.js";
 
 const registerUser = async (req, res, next) => {
     try {
@@ -30,7 +29,7 @@ const registerUser = async (req, res, next) => {
         //Set the list of avatars by default
         const randomId = Math.floor(Math.random() * (5 - 1)) + 1;
         const avatarSelected = await Avatar.findOne({ id: randomId });
-        const avatarFamilyList = await AvatarFamily.find();
+        const avatarList = await Avatar.find();
 
         //Create new User
         const newUser = new User({
@@ -43,7 +42,7 @@ const registerUser = async (req, res, next) => {
 
         await newUser.save();
 
-        avatarFamilyList.forEach(
+        avatarList.forEach(
             async (el) =>
                 await User.findOneAndUpdate(
                     { email: newUser.email },
@@ -53,14 +52,16 @@ const registerUser = async (req, res, next) => {
                 )
         );
 
-        const userRegistered = await User.findOne({ email: newUser.email });
+        const userRegistered = await User.findOne({
+            email: newUser.email,
+        }).populate("avatarList");
 
         //Set the user into the avatar by default
         await Avatar.findOneAndUpdate(
             { id: avatarSelected.id },
             {
                 $push: {
-                    users: userRegistered,
+                    users: userRegistered._id,
                 },
             }
         );
@@ -237,7 +238,6 @@ const createComment = async (req, res, next) => {
             content: content,
             data: new Date(),
             topic: topic,
-            likes: 0,
             replies: [],
         });
 
@@ -314,7 +314,6 @@ const createReply = async (req, res, next) => {
             content: content,
             data: new Date(),
             topic: parentComment.topic,
-            likes: 0,
         });
 
         await newComment.save();
@@ -435,6 +434,41 @@ const deleteComment = async (req, res, next) => {
     }
 };
 
+const followTopic = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { topicId } = req.body;
+
+        const user = await User.findById(id);
+        const topic = await Topic.findOne({ id: topicId });
+
+        await Topic.findOneAndUpdate(
+            { id: topicId },
+            {
+                $push: {
+                    followers: user,
+                },
+            }
+        );
+
+        await User.findByIdAndUpdate(id, {
+            $push: {
+                topicsFollowing: topic,
+            },
+        });
+
+        const userUpdated = await User.findById(id);
+        const topicUpdated = await Topic.findOne({ id: topicId });
+
+        res.status(200).json({
+            user: userUpdated,
+            topic: topicUpdated,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export {
     registerUser,
     logInUser,
@@ -444,6 +478,7 @@ export {
     createTopic,
     createComment,
     createReply,
+    followTopic,
     setAvatarProfile,
     deleteComment,
 };
