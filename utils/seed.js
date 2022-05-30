@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { Topic } from "../api/models/topic.schema.js";
+import { Comment } from "../api/models/comment.schema.js";
 import { Avatar } from "../api/models/avatar.schema.js";
 import { FamilyTopic } from "../api/models/familyTopic.schema.js";
 import { AvatarFamily } from "../api/models/avatarFamily.schema.js";
@@ -44,6 +46,9 @@ const createCollections = async () => {
 
     await AvatarFamily.collection.drop();
     await AvatarFamily.insertMany(avatarFamilyDoc);
+
+    await Topic.collection.drop();
+    await Comment.collection.drop();
 };
 
 const updateNoobAvatarFamily = async () => {

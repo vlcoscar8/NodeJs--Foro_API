@@ -7,6 +7,7 @@ import { connectDB } from "./config/db.js";
 import { avatarRouter } from "./api/routes/avatar.routes.js";
 import { userRouter } from "./api/routes/user.routes.js";
 import { topicRouter } from "./api/routes/topic.routes.js";
+import { commentRouter } from "./api/routes/comment.routes.js";
 
 // Dotenv
 dotenv.config();
@@ -45,7 +46,7 @@ server.use(
 server.use("/avatar", avatarRouter);
 server.use("/user", userRouter);
 server.use("/topic", topicRouter);
-
+server.use("/comment", commentRouter);
 // Errors
 server.use("*", (req, res, next) => {
     const error = new Error("Route not found");
