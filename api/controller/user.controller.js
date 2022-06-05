@@ -236,7 +236,7 @@ const createComment = async (req, res, next) => {
         // Create a new comment and save to database
         const newComment = new Comment({
             content: content,
-            data: new Date(),
+            data: Date.now(),
             topic: topic,
             replies: [],
         });
