@@ -27,7 +27,9 @@ const getFamilyDetail = async (req, res, next) => {
 const getTopicDetail = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const topicDetail = await Topic.find({ id: id }).populate("user");
+        const topicDetail = await Topic.find({ id: id })
+            .populate("user")
+            .populate("comments");
 
         res.status(200).json(topicDetail);
     } catch (error) {
