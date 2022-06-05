@@ -154,11 +154,6 @@ const createTopic = async (req, res, next) => {
         const { id } = req.params;
         const { title, familyTopic } = req.body;
         const wallpaper = req.file_url;
-        // const { logo } = req.file_url;
-
-        console.log(wallpaper);
-
-        return;
 
         // Check if the topic has been already created
         const topicCreated = await Topic.findOne({ title: title });
@@ -177,7 +172,6 @@ const createTopic = async (req, res, next) => {
         const newTopic = new Topic({
             title: title,
             wallpaper: wallpaper,
-            logo: logo,
             familyTopic: familyTopic,
         });
         await newTopic.save();

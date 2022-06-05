@@ -1,5 +1,6 @@
 import express from "express";
 import { upload, uploadToCloudinary } from "../../middleware/cloudinary.js";
+import { isAuth } from "../../middleware/jwt.js";
 import {
     registerUser,
     logInUser,
@@ -27,7 +28,7 @@ router.post(
 );
 router.post(
     "/topic/:id",
-    [upload.single("img"), uploadToCloudinary],
+    [upload.single("wallpaper"), uploadToCloudinary, isAuth],
     createTopic
 );
 router.post("/comment/:id", createComment);
