@@ -35,6 +35,7 @@ const uploadToCloudinary = async (req, res, next) => {
             await fs.unlinkSync(filePath);
 
             req.file_url = image.secure_url;
+
             return next();
         } catch (error) {
             return next(error);

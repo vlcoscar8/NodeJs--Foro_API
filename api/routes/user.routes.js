@@ -1,4 +1,5 @@
 import express from "express";
+import { upload, uploadToCloudinary } from "../../middleware/cloudinary.js";
 import {
     registerUser,
     logInUser,
@@ -19,8 +20,16 @@ router.post("/register", registerUser);
 router.post("/login", logInUser);
 router.post("/logout", logOutUser);
 router.get("/:id", getUserDetail);
-router.post("/edit/:id", editUserInfo);
-router.post("/topic/:id", createTopic);
+router.post(
+    "/edit/:id",
+    [upload.single("img"), uploadToCloudinary],
+    editUserInfo
+);
+router.post(
+    "/topic/:id",
+    [upload.single("img"), uploadToCloudinary],
+    createTopic
+);
 router.post("/comment/:id", createComment);
 router.post("/reply/:id", createReply);
 router.post("/follow/:id", followTopic);

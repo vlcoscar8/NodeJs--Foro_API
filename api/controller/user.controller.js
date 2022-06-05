@@ -152,7 +152,13 @@ const editUserInfo = async (req, res, next) => {
 const createTopic = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { title, wallpaper, logo, familyTopic } = req.body;
+        const { title, familyTopic } = req.body;
+        const wallpaper = req.file_url;
+        // const { logo } = req.file_url;
+
+        console.log(wallpaper);
+
+        return;
 
         // Check if the topic has been already created
         const topicCreated = await Topic.findOne({ title: title });
