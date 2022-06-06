@@ -20,7 +20,7 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", logInUser);
 router.post("/logout", logOutUser);
-router.get("/:id", getUserDetail);
+router.get("/:username", getUserDetail);
 router.post(
     "/edit/:id",
     [upload.single("img"), uploadToCloudinary],
