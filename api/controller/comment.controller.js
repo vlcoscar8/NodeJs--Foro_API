@@ -5,7 +5,9 @@ const getCommentDetail = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const comment = await Comment.findOne({ id: id }).populate("user");
+        const comment = await Comment.findOne({ id: id })
+            .populate("user")
+            .populate("replies");
 
         res.status(200).json(comment);
     } catch (error) {
