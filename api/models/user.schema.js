@@ -40,7 +40,6 @@ const userSchema = new Schema({
 userSchema.set("toJSON", {
     transform: (document, returnedObject) => {
         delete returnedObject.password;
-        delete returnedObject.email;
     },
 });
 

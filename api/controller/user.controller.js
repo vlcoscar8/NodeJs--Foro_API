@@ -493,5 +493,5 @@ export {
     followTopic,
     setAvatarProfile,
     deleteComment,
-    getUserDetailByUsername
+    getUserDetailByUsername,
 };
