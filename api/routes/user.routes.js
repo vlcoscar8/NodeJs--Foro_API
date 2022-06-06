@@ -13,6 +13,7 @@ import {
     followTopic,
     setAvatarProfile,
     deleteComment,
+    getUserDetailByUsername,
 } from "../controller/user.controller.js";
 
 const router = express.Router();
@@ -20,7 +21,8 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", logInUser);
 router.post("/logout", logOutUser);
-router.get("/:username", getUserDetail);
+router.get("/:id", getUserDetail);
+router.get("/:username", getUserDetailByUsername);
 router.post(
     "/edit/:id",
     [upload.single("img"), uploadToCloudinary],
