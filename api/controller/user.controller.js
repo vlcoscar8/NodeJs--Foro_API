@@ -87,9 +87,9 @@ const logInUser = async (req, res, next) => {
         );
 
         if (!user || !isValidPassword) {
-            const error = "The email or password is incorrect";
+            const error = new Error("The email or password is incorrect");
 
-            return res.status(401).json(error);
+            return next(error);
         }
 
         const token = jwt.sign(
