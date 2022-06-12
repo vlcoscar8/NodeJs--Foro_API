@@ -14,6 +14,7 @@ import {
     setAvatarProfile,
     deleteComment,
     getUserDetailByUsername,
+    deleteFollow,
 } from "../controller/user.controller.js";
 
 const router = express.Router();
@@ -36,7 +37,8 @@ router.post(
 router.post("/comment/:id", createComment);
 router.post("/reply/:id", createReply);
 router.post("/follow/:id", followTopic);
-router.put("/avatar/:id", setAvatarProfile);
+router.post("/avatar/:id", setAvatarProfile);
 router.delete("/comment/:id", deleteComment);
+router.delete("/followed/:id", deleteFollow);
 
 export { router as userRouter };

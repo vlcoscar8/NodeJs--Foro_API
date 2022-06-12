@@ -386,7 +386,7 @@ const setAvatarProfile = async (req, res, next) => {
         const { avatarId } = req.body;
 
         const user = await User.findById(id).populate("avatarList");
-        const avatar = await Avatar.findOne({ id: avatarId });
+        const avatar = await Avatar.findById(avatarId);
 
         // Check if the user has coins to buy the avatar
         if (user.coins < avatar.price) {
@@ -395,15 +395,12 @@ const setAvatarProfile = async (req, res, next) => {
                 .json("The user has not coins enought to buy the avatar");
         }
 
-        //Set the avatar choosen to the user
-        await Avatar.findOneAndUpdate(
-            { id: avatarId },
-            {
-                $push: {
-                    users: user,
-                },
-            }
-        );
+        //Set the user to the avatar
+        await Avatar.findByIdAndUpdate(avatarId, {
+            $push: {
+                users: user,
+            },
+        });
 
         res.status(200).json(user);
     } catch (error) {
@@ -451,8 +448,16 @@ const followTopic = async (req, res, next) => {
         const { id } = req.params;
         const { topicId } = req.body;
 
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate("topicsFollowing");
         const topic = await Topic.findOne({ id: topicId });
+
+        const sameTopic = user.topicsFollowing.find(
+            (el) => el.title === topic.title
+        );
+
+        if (sameTopic) {
+            return res.status(200).json("The user already follow this topic");
+        }
 
         await Topic.findOneAndUpdate(
             { id: topicId },
@@ -481,6 +486,42 @@ const followTopic = async (req, res, next) => {
     }
 };
 
+const deleteFollow = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { topicId } = req.body;
+
+        const user = await User.findById(id);
+        const topic = await Topic.findOne({ id: topicId });
+
+        await Topic.findOneAndUpdate(
+            { id: topicId },
+            {
+                $pull: {
+                    followers: user.id,
+                },
+            }
+        );
+
+        await User.findByIdAndUpdate(id, {
+            $pull: {
+                topicsFollowing: topic.id,
+            },
+        });
+
+        const userUpdated = await User.findById(id);
+        const topicUpdated = await Topic.findOne({ id: topicId });
+
+        res.status(200).json({
+            user: userUpdated,
+            topic: topicUpdated,
+            message: "UnFollow",
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export {
     registerUser,
     logInUser,
@@ -494,4 +535,5 @@ export {
     setAvatarProfile,
     deleteComment,
     getUserDetailByUsername,
+    deleteFollow,
 };
