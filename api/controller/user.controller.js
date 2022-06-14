@@ -407,7 +407,7 @@ const setAvatarProfile = async (req, res, next) => {
         const { avatarImg } = req.body;
 
         await User.findByIdAndUpdate(id, {
-            img: avatarImg,
+            avatarProfile: avatarImg,
         });
 
         const userUpdated = await User.findById(id).populate("avatarList");
