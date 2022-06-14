@@ -396,11 +396,14 @@ const setAvatarProfile = async (req, res, next) => {
         }
 
         //Set the user to the avatar
-        await Avatar.findByIdAndUpdate(avatarId, {
-            $push: {
-                users: user,
-            },
-        });
+        await Avatar.findOne(
+            { id: avatarId },
+            {
+                $push: {
+                    users: user,
+                },
+            }
+        );
 
         res.status(200).json(user);
     } catch (error) {
