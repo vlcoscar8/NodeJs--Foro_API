@@ -396,7 +396,7 @@ const setAvatarProfile = async (req, res, next) => {
         }
 
         //Set the user to the avatar
-        await Avatar.findOne(
+        await Avatar.findOneAndUpdate(
             { id: avatarId },
             {
                 $push: {
