@@ -385,8 +385,8 @@ const setAvatarProfile = async (req, res, next) => {
         const { id } = req.params;
         const { avatarId } = req.body;
 
-        const user = await User.findOne({ id: id }).populate("avatarList");
-        const avatar = await Avatar.findById(avatarId);
+        const user = await User.findById(id).populate("avatarList");
+        const avatar = await Avatar.findOne({ id: avatarId });
 
         // Check if the user has coins to buy the avatar
         if (user.coins < avatar.price) {
