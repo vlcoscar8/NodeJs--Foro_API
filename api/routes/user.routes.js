@@ -6,7 +6,7 @@ import {
     logInUser,
     logOutUser,
     getUserDetail,
-    editUserInfo,
+    buyAvatar,
     createTopic,
     createComment,
     createReply,
@@ -24,11 +24,7 @@ router.post("/login", logInUser);
 router.post("/logout", logOutUser);
 router.get("/:id", getUserDetail);
 router.get("/name/:username", getUserDetailByUsername);
-router.post(
-    "/edit/:id",
-    [upload.single("img"), uploadToCloudinary],
-    editUserInfo
-);
+router.post("/edit/:id", [upload.single("img"), uploadToCloudinary], buyAvatar);
 router.post(
     "/topic/:id",
     [upload.single("wallpaper"), uploadToCloudinary, isAuth],

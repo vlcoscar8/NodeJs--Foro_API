@@ -147,13 +147,13 @@ const getUserDetailByUsername = async (req, res, next) => {
     }
 };
 
-const editUserInfo = async (req, res, next) => {
+const buyAvatar = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { avatarProfile, coins } = req.body;
+        const { avatarId, coins } = req.body;
 
         const user = await User.findById(id).populate("avatarList");
-        const avatar = await Avatar.findOne({ img: avatarProfile });
+        const avatar = await Avatar.findOne({ id: avatarId });
 
         // Check if the user has coins to buy the avatar
         if (user.coins < avatar.price) {
@@ -161,10 +161,18 @@ const editUserInfo = async (req, res, next) => {
                 .status(200)
                 .json("The user has not coins enought to buy the avatar");
         }
+        //Set the user to the avatar
+        await Avatar.findOneAndUpdate(
+            { id: avatarId },
+            {
+                $push: {
+                    users: user,
+                },
+            }
+        );
 
         await User.findByIdAndUpdate(id, {
-            avatarProfile: avatarProfile,
-            img: coins,
+            coins: coins,
         });
         const userEdited = await User.findById(id);
 
@@ -396,21 +404,15 @@ const createReply = async (req, res, next) => {
 const setAvatarProfile = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { avatarId } = req.body;
+        const { avatarImg } = req.body;
 
-        const user = await User.findById(id).populate("avatarList");
+        await User.findByIdAndUpdate(id, {
+            img: avatarImg,
+        });
 
-        //Set the user to the avatar
-        await Avatar.findOneAndUpdate(
-            { id: avatarId },
-            {
-                $push: {
-                    users: user,
-                },
-            }
-        );
+        const userUpdated = await User.findById(id).populate("avatarList");
 
-        res.status(200).json(user);
+        res.status(200).json(userUpdated);
     } catch (error) {
         next(error);
     }
@@ -535,7 +537,7 @@ export {
     logInUser,
     logOutUser,
     getUserDetail,
-    editUserInfo,
+    buyAvatar,
     createTopic,
     createComment,
     createReply,
