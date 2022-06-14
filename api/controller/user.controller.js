@@ -150,9 +150,22 @@ const getUserDetailByUsername = async (req, res, next) => {
 const editUserInfo = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const userBody = req.body;
+        const { avatarProfile, coins } = req.body;
 
-        await User.findByIdAndUpdate(id, { ...userBody });
+        const user = await User.findById(id).populate("avatarList");
+        const avatar = await Avatar.findOne({ img: avatarProfile });
+
+        // Check if the user has coins to buy the avatar
+        if (user.coins < avatar.price) {
+            return res
+                .status(200)
+                .json("The user has not coins enought to buy the avatar");
+        }
+
+        await User.findByIdAndUpdate(id, {
+            avatarProfile: avatarProfile,
+            img: coins,
+        });
         const userEdited = await User.findById(id);
 
         res.status(200).json(userEdited);
@@ -386,14 +399,6 @@ const setAvatarProfile = async (req, res, next) => {
         const { avatarId } = req.body;
 
         const user = await User.findById(id).populate("avatarList");
-        const avatar = await Avatar.findOne({ id: avatarId });
-
-        // Check if the user has coins to buy the avatar
-        if (user.coins < avatar.price) {
-            return res
-                .status(200)
-                .json("The user has not coins enought to buy the avatar");
-        }
 
         //Set the user to the avatar
         await Avatar.findOneAndUpdate(
